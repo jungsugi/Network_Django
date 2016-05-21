@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'chess_app'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -48,6 +49,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    #sooyoung 추가 -> middeleware에 왜 추가하는지 모르겠음
 ]
 
 ROOT_URLCONF = 'chese.urls'
