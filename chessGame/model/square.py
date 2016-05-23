@@ -3,13 +3,15 @@ from logger import logger
 
 import pdb
 
-class Square(object):
+class Square(object):	#square단위로 한번더 자름.
 	def __init__(self, position):
 		self.piece = None
 		self.row = position[0]
 		self.col = position[1]
-		self.position = position
-
+		self.position = position #'position'은 'Array'!!!. 
+		#왜 position은 array자료형일까 ? list는 +/- 연산이 불가하다.
+		#즉 square는 (row,col)형태를 지키면서 사칙연산을 해야하므로 array형태가 되어야한다.
+		#list는 +는 값을 추가하는 형태로 되긴하지만, (row,col,~?)의 형태가 되고, 나머지 사칙연산은 아이에 불가하다. 
 		self.piece = PieceFactory.createPieceWithPos(position)
 
 		if self.piece is not None:
