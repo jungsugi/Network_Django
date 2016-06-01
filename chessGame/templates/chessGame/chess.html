@@ -11,6 +11,34 @@
         <link rel="stylesheet" href="{% static 'css/chessGame.css' %}">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--
+        검은 폰 a
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194987-200.png" style="width:70px;height:65px"/>
+        검은 나이트 c
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194989-200.png" style="width:70px;height:65px"/>
+        검은 비숍 d
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194985-200.png" style="width:70px;height:65px"/>
+        검은 룩 b
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194991-200.png" style="width:70px;height:65px"/>
+        검은 퀸 e
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194984-200.png" style="width:70px;height:65px"/>
+        검은 킹 f
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194983-200.png" style="width:70px;height:65px"/>
+
+        하얀 폰 g
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194990-200.png" style="width:70px;height:65px"/>
+        하얀 나이트 i
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194986-200.png" style="width:70px;height:65px"/>
+        하얀 비숍 j
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194979-200.png" style="width:70px;height:65px"/>
+        하얀 룩 h
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194988-200.png" style="width:70px;height:65px"/>
+        하얀 퀸 k
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194980-200.png" style="width:70px;height:65px"/>
+        하얀 킹 l
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194981-200.png" style="width:70px;height:65px"/>
+
+        -->
         
     </head>
     <body>
@@ -18,135 +46,51 @@
             <div class="row">
               <div class="col-md-8 col-xs-8">
               <h1>체스판</h1>
+              <h1>{{str}}</h1>
               <table id="chess">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td><a class="acceptable">&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                        
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                    <td><a>&#9817;<a></td>
-                        
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+              {%for piece in board%}
+              <tr>
+                    {%for i in piece%}
+
+                    {%if i == 'a'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194987-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'b'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194991-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'c'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194989-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'd'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194985-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'e'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194984-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'f'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194983-200.png" style="width:70px;height:65px"/></td>
+
+                    {%elif i == 'g'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194990-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'h'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194988-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'i'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194986-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'j'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194979-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'k'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194980-200.png" style="width:70px;height:65px"/></td>
+                    {%elif i == 'l'%}
+                    <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194981-200.png" style="width:70px;height:65px"/></td>
+                    {%else%}
+                    <td></td>
+
+
+                    {%endif%}
+                    {%endfor%}
+              </tr>
+              {%endfor%}
               </table>
               <br>
-              <form action="/main/" method="POST">
+              <form action="" method="POST">
               {%csrf_token%}
                 <div class="form-group">
-                  <input name="title" type="text" class="form-control">
+                  <input name="move" type="text" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-default">보내기</button>
               </form>    
