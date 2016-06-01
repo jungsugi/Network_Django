@@ -23,7 +23,7 @@ class Piece(object):
 			return 'Piece is a %s of color %s' %(self.pieceName,
 					self.pieceColor)
 
-	def setSquare(self, square):
+	def setSquare(self, square): #Piece에 square를 setting핟다 -> 비숍같은말은 square를 셋팅하면 그 square색이 변하지 않으므로
 		self.square = square
 
 	def clearSquare(self):   
@@ -46,10 +46,6 @@ class Piece(object):
 	def getPieceColor(self):
 		return self.pieceColor
 
-	#강제로 getMovePath class를 상속받게 한다. 상속받는 자식 클래슨는 반드시 getMovePath 메소드를 구현해야한다.
-	def getMovePath(self, fromSquare, toSquare):
-		raise NotImplementedError("Piece subclasses should implemet this method")
-
 	def getIntermediateMovePath(self, fromSquare, toSquare): # ~~??
 		path = self.getMovePath(fromSquare, toSquare)
 		return path[1: -1]
@@ -57,12 +53,17 @@ class Piece(object):
 	def isPieceKing(self):	#piece의 type이 king인지 확인
 		return False
 
+    #강제로 getMovePath class를 상속받게 한다. 상속받는 자식 클래스들은 반드시 1개 이상에 getMovePath 메소드를 구현해야한다.
+	def getMovePath(self, fromSquare, toSquare):
+		raise NotImplementedError("Piece subclasses should implemet this method")
+
 	def isKingInCheck(self):
 		raise NotImplementedError("Piece subclasses should implement this method")
 
 	def isValidPieceMove(self, fromSquare, toSquare):
 		raise NotImplementedError("Piece subclasses should implement this method")
 
+	#말을 움직인후 말이 움직였는지 확인
 	def movePiece(self, fromSquare, toSquare):
 		raise NotImplementedError("Piece subclasses should implement this method")
 
@@ -110,7 +111,7 @@ class KingPiece(Piece):  #왕의 움직임을 정한다.
 class QuuenPiece(Piece):
 
 	def __init__(self,PieceColor):
-		super(QueenPiece, self).__init__(PieceColor, PieceType.Queen)
+		super(QueenPiece, self).__init__(pieceColor, PieceType.Queen)
 
 	def isValidPieceMove(self, fromSquare, toSquare):
 		rowMove = abs(fromSquare.row - toSquare.row)
@@ -138,6 +139,7 @@ class QuuenPiece(Piece):
 		mulRow = mulCol = 1 # 움직인 위치를 곱할 상수
 
 # 대각선으로 움직일때, (row,col)의 형태에서 시작점의 row,col이 둘다 도착점의 row,col보다 크면 반대로 이동해야하므로 곱하는상수를 -1로 바꾼다.
+# 대각선이 아닌경우, 직선으로 움직일때 row를 먼저비교하고 같다면 , 그다음 col을 비교한다.		
 		if fromPos > toPos: 
 			mulRow = mulcol = -1 
 
@@ -154,3 +156,121 @@ class QuuenPiece(Piece):
 	def movePiece(self, fromSquare, toSquare):  #Queen이 움직였음을 확인
 		self.moved = True
 		return True
+
+class BishopPiece(self):
+	def __init__(self, pieceColor):
+		super(BishopPiece, self).__init__(pieceColor, PieceType.Bishop)
+
+	def setSquare(self, square):	
+	#비숏은 Square 셋팅해놓으면 움직일수 있는 square color가 변하지 않는다. 
+		super(BishopPiece,self).setSquare(square)
+		self.SquareColor = square.SquareColor
+
+	def isValidPieceMove(self, fromSquare, toSquare):
+
+		if fromSquare.squareColor != toSquare.squareColor:
+			return False
+
+		rowMove = abs(fromSquare.row - toSquare.row)
+		colMove = abs(fromSquare.col - toSquare.col)
+
+		#만약 row 가 갈수있는 범위를 벗어나면,
+		if rowMove != colMove or rowMove == 0:
+			return False
+
+		return True
+
+	def movePiece(self, fromSquare, toSquare):
+		self.moved = True
+		return True
+
+class RockPiece(Piece):
+	def __init__(self, pieceColor):
+		super(RockPiece, self).__init__(pieceColor, PieceType.Rock)
+
+	def isValidPieceMove(self, fromSquare, toSqaure):
+		fromPos = fromSquare.getPosition()
+		toPos = toSquare.getPosition()
+
+		rowDiff = abs(fromPos[0] - toPos[0])
+		colDiff = abs(formPos[1] - toPos[1])
+
+		if(rowDiff == 0 and colDiff != 0) or (rowDiff != 0 and colDiff ==0):
+			return True
+
+		return True
+
+	def getmovePath(self, fromSquare, toSquare):		
+		fromPos = fromSquare.getPosition()
+		toPos = toSquare.getPosition()
+
+		mulRow = mulCol = 1
+
+		#(row,col)의 형태에서 row부터 검사하는데, row가 같다면 col을 비교한다.(row와 col은 한쪽은 같아야 하므로
+		# pos 전체인 Array로 비교해도 상관은 없다 .)
+		if fromPos > toPos:
+			mulRow = mulCol = -1
+		if fromSquare.row == toSqaure.row:
+			mulRow = 0
+		if fromSuqare.col == fromSquare.col:
+			mulCol = 0
+
+		path = [fromPos] #경로에 일단 pos(Array type)를 집어 넣는다. path타입은 list
+		diff = max(abs(fromSquare.row - toSquare.row),abs(fromSquare.col - toSQuare.col)) 
+
+		for i in xrange(1, diff+1): #(1,2,3,4~~ diff포함)
+			path.append((fromSquare.row + i*mulRow),(toSquare.col + i*mulCol))
+
+		return path	
+
+	def movePiece(self, fromSquare, toSquare): #말을 움직인후 말이 움직였는지 확인
+		self.moved = True
+		return True 
+
+class PawnPiece(Piece):
+	def __init__(self,PieceColor):
+		super(PawnPiece, self).__init__(pieceColor,PieceType.Pawn)
+		self.firstMove = True   #개개의 pawn마다 첫번째 firstMove를 가지고 있음.
+								#첫번째는 2칸을 움직일수 있으므로, 그이후에는 False로 바꾼다.		
+
+	def isValidPieceMove(self, fromSquare, toSquare):
+		raise NotImplementedError("PawnPiece subClasses should implemnet this method")
+		# pawn이 색상마다 직진만 할 수있으므로 상속받아서 방향만 바꿔서 사용한다.
+
+	def isValidPieceMove2(self, fromPiece, toPiece, fromSquare, toSquare):
+		#폰은 '움직일위치'와 '말을 먹을 위치'가 달라서 움직일수 있는 경로가 정해져 있으므로 구분한다. 
+		if abs(toSquare.col - fromSquare.col) == 0: #pawn은 상대방 말을 먹을때 말고는 직진만 할수 있다.
+			move = abs(toSquare.row - fromSquare.row)
+			if move > 2:  #2칸 이상 움직이면 안됨
+				return False
+			if move == 2 and not self.firstMove: #첫번째 움직임이 아니면, 2칸을 움직일수 없다.
+				return False
+		elif abs(toSquare.col - fromSquare.col) ==1 and abs(toSquare.row - fromSquare.row) ==1 and toPiece	
+		#pawn은 상대방 말을 먹을때만 대각선으로 움직일수 있다. 
+			if fromPiece.pieceColor == toPiece.pieceColor: #상대방 말만 먹을수 있다.
+				return False 
+		#그 이외에는 ?...!!!!! 여기 잘모르겠으..
+		else:
+			return False
+
+		return True	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
