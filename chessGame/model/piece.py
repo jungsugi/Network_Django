@@ -1,6 +1,6 @@
 from enum import enum
 
-class Piece(object):
+class Piece(object):  #제일 상위 class로 object(객체)를 상속받는다.
 
 	PieceName = ['King', 'Queen', 'Bishop', 'Knight', 'Rook', 'Pawn']
 	PieceColors = ['White', 'Black']
@@ -112,6 +112,7 @@ class QuuenPiece(Piece):
 
 	def __init__(self,PieceColor):
 		super(QueenPiece, self).__init__(pieceColor, PieceType.Queen)
+	#이 위에는 부모class인 Piece class의 객체를 호출해서 초기화 하는 동시에 Queen Piece를 초기화 하는 작업이다.
 
 	def isValidPieceMove(self, fromSquare, toSquare):
 		rowMove = abs(fromSquare.row - toSquare.row)
@@ -228,7 +229,7 @@ class RockPiece(Piece):
 		return True 
 
 class PawnPiece(Piece):
-	def __init__(self,PieceColor):
+	def __init__(self,PieceColor): #여기서 받는 PieceColor는 PawnPiece안에서만 사용하기위한 매개변수이다.
 		super(PawnPiece, self).__init__(pieceColor,PieceType.Pawn)
 		self.firstMove = True   #개개의 pawn마다 첫번째 firstMove를 가지고 있음.
 								#첫번째는 2칸을 움직일수 있으므로, 그이후에는 False로 바꾼다.		
@@ -237,7 +238,7 @@ class PawnPiece(Piece):
 		raise NotImplementedError("PawnPiece subClasses should implemnet this method")
 		# pawn이 색상마다 직진만 할 수있으므로 상속받아서 방향만 바꿔서 사용한다.
 
-	def isValidPieceMove2(self, fromPiece, toPiece, fromSquare, toSquare):
+	def _isValidPieceMove(self, fromPiece, toPiece, fromSquare, toSquare):
 		#폰은 '움직일위치'와 '말을 먹을 위치'가 달라서 움직일수 있는 경로가 정해져 있으므로 구분한다. 
 		if abs(toSquare.col - fromSquare.col) == 0: #pawn은 상대방 말을 먹을때 말고는 직진만 할수 있다.
 			move = abs(toSquare.row - fromSquare.row)
@@ -255,12 +256,107 @@ class PawnPiece(Piece):
 
 		return True	
 
+	def movePiece(self, fromSquare, toSquare):
+		self.move = True
+		self.firstMove = False
 
 
+class WhitePawnPiece(PawnPiece):
+	def __init__(self, pieceColor): #pieceColor는 whitePawnPiece에서 사용하기 위한 변수 
+		super(WhitePawnPiece, self).__init__(pieceColor) #상속받은 class를 초기화하는 작업	
 
+	def isValidPieceMove(self, fromSquare, toSquare):
+		#흰색 phone은 오직 아래로만 내려간다.
+		fromPiece = fromSquare.piece
+		toPiece = toSquare.piece
 
+		#위로 올라갈수 없다
+		if toSquare.row <= fromSquare.row:
+			return False
 
+		return self._isValidPawnMove(fromPiece, toPiece, fromSquare, toSquare)
 
+	def getMovePath(self, fromSquare, toSquare):
+		if not self.isValidPieceMove(fromSquare, toSquare):
+			raise ValueError('Invalid value for moves of fromSquare to toSquare')
+
+		return [] # move == 2 이면 movepath를 리턴한다.
+
+class BlackPawnPiece(PawnPiece):
+	def __init__(self, pieceColor):
+		super(BlackPawnPiece,self).__ini__(pieceColor)
+
+	def isValidPieceMove(self, fromSquare, toSquare):
+		#Black pawn은 무조건 위로 올라가야 한다.
+		fromPiece = fromSquare.piece
+		toPiece = toSquare.piece
+
+		if toSquare.row >= fromSquare.row:
+			return False
+
+		return self._isValidPawnMove(fromPiece, toPiece, fromSquare, toSquare)
+
+	def getMovePath(self, fromSuqare, toSquare):
+		if not self.isValidPieceMove(fromSquare, toSquare)
+			raise ValueError('Invalid value for moves of fromSquare to toSquare')
+		return []
+	
+class PieceType(Enum):
+	King = 0
+	Queen = 1
+	Bishop = 2
+	Knight = 3
+	Rock = 4	
+	Pawn = 5
+
+class PieceColor(Enum):
+	White = 0
+	Black = 1
+
+class PieceFactory(object):
+	def __init__(self):
+		return
+
+	@staticmethod  #c++에서 staticmethod와 똑같음 즉, 모든 객체가 공유하는 메소드 이다.
+	def createPiece(pieceColor, pieceType):
+		if pieceColor is None:
+			return None
+		if pieceType == PieceType.King:
+			return KingPiece(pieceColor)
+		elif pieceType == PieceType.Queen:
+			return QueenPiece(pieceColor)
+		elif pieceType == PieceType.Bishop:
+			return BishopPiece(pieceColor)
+		elif pieceType == PieceType.Knight:
+			return KnightPiece(pieceColor)
+		elif pieceType == PieceType.Rock:
+			return RockPiece(pieceColor)
+		elif pieceType == PieceType.Pawn:
+			if pieceColor == PieceColor.White:
+				return WhitePawnPiece(pieceColor)	
+			else:
+				return BlackPawnPiece(pieceColor)
+		else:
+			return None
+
+		@staticmethod
+		def createPieceWithPos(piecePos):
+			row = piecePos[0]
+			col = piecePos[1]
+
+			if row <2 or row > 5:
+				if row < 2:
+					pieceColor = PieceColor.White
+				else:
+					pieceColor = PieceColor.Black
+			if row == 1 or row == 6:
+				return PieceFactory.createPiece(pieceColor, PieceType.Pawn)
+			elif col ==0 or col ==7:
+				return PieceFactory.createPiece(pieceColor, PieceType.Rock)
+			elif col == 1 or col ==6:
+				return PieceFactory.createPiece(pieceColor.PieceType.Knight)
+			elif col == 2 or col ==5:
+				return PieceFactory.createPiece(pieceColor,PieceType.Bishop)	
 
 
 
