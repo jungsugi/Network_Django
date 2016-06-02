@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^make/$', views.make),
     url(r'^make/ing/$', views.ing),
     url(r'^room/(?P<room_id>\d+)/chess/$', views.chess),
+    url(r'^room/(?P<room_id>\d+)/chess/ing/$', views.chess_ing),
  ]

@@ -73,61 +73,72 @@ def chess(request, room_id):
 			['h','i','j','k','l','j','i','h']]
 
 	chess=ChessBoard.objects.filter(room_number=room_id)
-	str=request.POST.get('move', False)
-	if(chess and str):
-		str=request.POST.get('move', False)
 
+	if(chess):
+		#str=request.POST.get('move', False)
 		ptr=chess[0].board
-
 		a=0
 		a=int(a)
 		for i in range(0,8):
 			for u in range(0,8):
-				k=ptr[a]
-				q=board[i][u]
-				board[i][u]=k
+				board[i][u]=ptr[a]
 				a+=1
-		""""		
-
-		board=[['b','c','d','e','f','d','c','b'],
-				['a','a','a','a','a','a','a','a'],
-				['x','x','x','x','x','x','x','x'],
-				['x','x','x','x','x','x','x','x'],
-				['x','x','x','x','x','x','x','x'],
-				['x','x','x','x','x','x','x','x'],
-				['g','g','g','g','g','g','g','g'],
-				['h','i','j','k','l','j','i','h']]
-		"""		
-		board[int(str[2])][int(str[3])]=board[int(str[0])][int(str[1])]
-		board[int(str[0])][int(str[1])]='x'
-
-		b=""
-		for i in board:
-			for j in i:
-				b=b+j
-
-		chess[0].board=b
-		chess[0].save()
 
 		context={'board':board,'str':str}
 		#return HttpResponse(ptr)	
 		return render(request, 'chessGame/chess.html',context)
-	else:
-		board=[['b','c','d','e','f','d','c','b'],
-				['a','a','a','a','a','a','a','a'],
-				['x','x','x','x','x','x','x','x'],
-				['x','x','x','x','x','x','x','x'],
-				['x','x','x','x','x','x','x','x'],
-				['x','x','x','x','x','x','x','x'],
-				['g','g','g','g','g','g','g','g'],
-				['h','i','j','k','l','j','i','h']]
 
+	else:
 		b=""
 		for i in board:
 			for j in i:
 				b=b+j
-
 		ChessBoard.objects.create(board=b, room_number=room_id)
 		context={'board':board}
 		#return HttpResponse(b)
 		return render(request, 'chessGame/chess.html',context)
+
+def chess_ing(request, room_id):
+
+	str=request.POST.get('move', False)
+	#str예외처리 필요
+
+	board=[['b','c','d','e','f','d','c','b'],
+			['a','a','a','a','a','a','a','a'],
+			['x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x'],
+			['g','g','g','g','g','g','g','g'],
+			['h','i','j','k','l','j','i','h']]
+
+	chess=ChessBoard.objects.get(room_number=room_id)
+	ptr=chess.board
+
+	a=0
+	#a=int(a)
+	for i in range(0,8):
+		for u in range(0,8):
+			board[i][u]=ptr[a]
+			a+=1
+
+	piece=board[int(str[0])][int(str[1])]
+	#piece와 str을 인자로 받아 piece의 str동작이 올바른 동작인지 판별하는 함수 필요
+	#동작이 적절하면 아래 실행
+		
+	board[int(str[2])][int(str[3])]=board[int(str[0])][int(str[1])]
+	board[int(str[0])][int(str[1])]='x'
+
+	b=""
+	for i in board:
+		for j in i:
+			b=b+j
+
+	chess.board=b
+	chess.save()
+
+	#context={'board':board,'str':str}
+	#return HttpResponse(chess.board)	
+	#return render(request, 'chessGame/chess.html',context)
+	return HttpResponseRedirect("/room/{}/chess".format(room_id))
+
