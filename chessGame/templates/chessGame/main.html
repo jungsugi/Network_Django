@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+{{user1.one_or_two}}
+
+
 <html>
     <head>
         <meta charset="UTF-8">
@@ -14,13 +17,13 @@
     <body>
         <div class="container" style=" margin-top:20px; background-color:lightgrey">
             {%for room in rooms%}
-              <a href="/room/{{room.id}}/">
+              <a href="/room/{{room.id}}/{{me.id}}/">
               <div>
-                  <div class="well" style="cursor:pointer;"">{{room.id}}. {{room.name}}</div>
+                  <div class="well" style="cursor:pointer;"">{{room.id}}. {{room.name}}. 인원 {{room.full}} /2</div>
               </div>
               </a>
             {%endfor%}
-              <a href="/make/">
+              <a href="/make/{{me.id}}/">
               <button class="btn btn-default">방 만들기</button>
               </a>
         </div>
