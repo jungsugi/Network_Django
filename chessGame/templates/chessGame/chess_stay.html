@@ -11,7 +11,8 @@
         <link rel="stylesheet" href="{% static 'css/chessGame.css' %}">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta http-equiv="refresh" content="1; url=/room/{{room.id}}/chess/stay/{{me.id}}/">
+ 
         <!--
         검은 폰 a
         <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194987-200.png" style="width:70px;height:65px"/>
@@ -90,16 +91,7 @@
               {%endfor%}
               </table>
               <br>
-              <form action="/room/{{room.id}}/chess/ing/{{me.id}}/" method="POST">
-              {%csrf_token%}
-                <div class="form-group">
-                  <input name="move" type="text" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-default">보내기</butto0>
-              </form>    
-              <form action="" method="POST">
 
-              {%csrf_token%}
                 <button type="submit" class="btn btn-default" value={{pinpong}}>수를 두기전에 누르시오.</button>
               </form>    
               </div>
@@ -110,24 +102,5 @@
               </div>
             </div>
       </div>
-
-      <!--
-      <script>
-
-        $('a').draggable({ containment: "table", revert: 'invalid' });
-
-        $('td').droppable({
-            drop: function(ev, ui) {
-                var dropped = ui.draggable;
-                var droppedOn = $(this);
-                $(droppedOn).droppable("disable");
-                $(dropped).parent().droppable("enable");
-                $(dropped).detach().css({top: 0, left: 0}).appendTo(droppedOn);
-            }
-        });   
-
-        $('td').not('td:empty').droppable("disable");
-      </script>
-      -->
     </body>
 </html>

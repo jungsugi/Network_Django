@@ -7,20 +7,38 @@ user1=""
 def index(request):
    return render(request, 'chessGame/index.html')
 
+def out(request, room_id, myname):
+	me=UserInfo.objects.get(id=myname)
+	room = RoomInfo.objects.get(id=int(room_id))
+
+	if request.POST.get('yes') :
+		room.user2 = 'none'
+		room.pull = 1
+		room.save()
+
+	context={'room' : room, 'me':me }
+
+	return render(request, 'chessGame/out.html',context)
 
 def index_ing(request):
-	str = request.POST.get('title', False)
-	UserInfo.objects.create(name=str)
 
-	user = UserInfo.objects.get(name=str)
-	request.session['user_id']=request.POST['title']
-	user.one_or_two = 2
-	user.save()
-	#return HttpResponseRedirect("/main")
-	return HttpResponseRedirect("/main/{}/".format(user.id))
+  
+   if request.POST.get('title') == '':
+      return render(request,'chessGame/errorname.html')
+   
+   else:
+      str = request.POST.get('title', False)
+      UserInfo.objects.create(name=str)
+
+      user = UserInfo.objects.get(name=str)
+      request.session['user_id']=request.POST['title']
+      user.one_or_two = 2
+      user.save()
+      #return HttpResponseRedirect("/main")
+      return HttpResponseRedirect("/main/{}/".format(user.id))
 
 def main(request,myname):
-   room = RoomInfo.objects.all()
+   room = RoomInfo.objects.filter(full=1)
 
    me=UserInfo.objects.get(id=myname)  
    context={'rooms':room, 'me':me }
@@ -100,11 +118,44 @@ def room_to_chess(requset, room_id, myname):
 		
 
 	#return HttpResponse("방 안")
+def chess_stay(request, room_id, myname):
+	global stay
+	me=UserInfo.objects.get(id=myname)
+	room=RoomInfo.objects.get(id=room_id)
+	stay=0
+	while 1:
+		if stay==1:
+			#return render(request,'chessGame/chess.html',context)
+			stay=0
+
+			me.turn=2
+			me.save()
+			return HttpResponseRedirect("/room/{}/chess/{}".format(room_id, myname))
+			#return HttpResponse("ok_go!!")
+			#return chess(request, room_id, myname)
+
 def chess(request, room_id, myname):
 	global ready
+	global stay
+	global turn
+	stay=0
 	
 	me = UserInfo.objects.get(id=myname)
 	room = RoomInfo.objects.get(id=int(room_id))
+	"""
+	if room.turn==0:
+		room.turn=1
+		room.save
+	"""
+	"""
+	if room.turn==1:
+		room.turn=2
+		room.save
+	
+	if room.turn==2:
+		room.turn=1
+		room.save
+	"""	
 
 	"""
 	a=검은 폰
@@ -134,31 +185,54 @@ def chess(request, room_id, myname):
 
 	chess=ChessBoard.objects.filter(room_number=room_id)
 
-	if(chess):
-		#str=request.POST.get('move', False)
-		ptr=chess[0].board
-		a=0
-		a=int(a)
-		for i in range(0,8):
-			for u in range(0,8):
-				board[i][u]=ptr[a]
-				a+=1
+	if not chess:
 
-		context={'board':board,'str':str,'room':room,'me':me}
-		#return HttpResponse(ptr)	
-		return render(request, 'chessGame/chess.html',context)
-
-	else:
 		b=""
 		for i in board:
 			for j in i:
 				b=b+j
 		ChessBoard.objects.create(board=b, room_number=room_id)
-		context={'board':board,'room':room,'me':me}
-		#return HttpResponse(b)
+		chess=ChessBoard.objects.filter(room_number=room_id)
+
+	#str=request.POST.get('move', False)
+	ptr=chess[0].board
+	a=0
+	a=int(a)
+	for i in range(0,8):
+		for u in range(0,8):
+			board[i][u]=ptr[a]
+			a+=1
+
+	context={'board':board,'str':str,'room':room,'me':me}
+	#return HttpResponse(ptr)
+	#return render(request, 'chessGame/chess.html',context)
+	
+	if me.turn==1:
+		me.turn=0
+		me.save()
+		#stay=1
+		return render(request, 'chessGame/chess_stay.html',context)
+		#return HttpResponse("기다려")
+
+	elif me.turn==2:
+		me.turn=0
+		me.save()
+		#return HttpResponse("고고")
 		return render(request, 'chessGame/chess.html',context)
 
+	elif room.turn==0:
+		room.turn=1
+		room.save()
+		#return HttpResponse("ㅠㅠ")
+		if me.name==room.user1:
+			return render(request, 'chessGame/chess.html',context)
+		elif me.name==room.user2:
+			return render(request, 'chessGame/chess_stay.html',context)
+
 def chess_ing(request, room_id, myname):
+	global stay
+
+	room=RoomInfo.objects.get(id=room_id)
 	me = UserInfo.objects.get(id=myname)
 	str=request.POST.get('move', False)
 	#str예외처리 필요
@@ -198,7 +272,11 @@ def chess_ing(request, room_id, myname):
 	chess.board=b
 	chess.save()
 
-	#context={'board':board,'str':str}
-	#return HttpResponse(chess.board)	
-	#return render(request, 'chessGame/chess.html',context)
+	me.turn=1
+	me.save()
+	stay=1
+
+	a=0
+	for i in range(0,1000000):
+		a+=1
 	return HttpResponseRedirect("/room/{}/chess/{}".format(room_id, me.id))
