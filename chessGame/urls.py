@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^room/(?P<room_id>\d+)/chess/(?P<myname>\d+)/$', views.chess),
     url(r'^room/(?P<room_id>\d+)/room_to_chess/(?P<myname>\d+)/$', views.room_to_chess),
     url(r'^room/(?P<room_id>\d+)/chess/ing/(?P<myname>\d+)/$', views.chess_ing),
-    url(r'^room/(?P<room_id>\d+)/chess/stay/(?P<myname>\d+)/$', views.chess_stay),
+     url(r'^room/(?P<room_id>\d+)/chess/stay/(?P<myname>\d+)/$', views.chess_stay),
  ]

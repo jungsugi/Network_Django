@@ -1,9 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import *
+from chessGame.model.rule import *
 ready=0;
 user1=""
+myturn=0;
 # Create your views here.
+def isNumber(s):
+  try:
+    float(s)
+    return True
+  except ValueError:
+    return False
+
 def index(request):
    return render(request, 'chessGame/index.html')
 
@@ -21,28 +30,36 @@ def out(request, room_id, myname):
 	return render(request, 'chessGame/out.html',context)
 
 def index_ing(request):
+	str = request.POST.get('title', False)
+	num2ptr=str.rstrip()
+	num1ptr=str.strip()
+	num3ptr=str.lstrip()
+	ptr=UserInfo.objects.filter(name=str)
+	if(str==""):
+		cout="이름에 공백이 있으면 안됩니다"
+		context={'cout':cout}
+		return render(request,'chessGame/errorname.html',context)
+	elif (num1ptr != num2ptr or num1ptr !=num3ptr):
+		cout="이름에 공백이 있으면 안됩니다"
+		context={'cout':cout}
+		return render(request,'chessGame/errorname.html',context)
+	elif(ptr):
+		cout='이미 있는 이름입니다'
+		context={'cout':cout}
+		return render(request,'chessGame/errorname.html',context)
+	else:
+		UserInfo.objects.create(name=str)
+		user = UserInfo.objects.get(name=str)
+		request.session['user_id']=request.POST['title']
+		user.one_or_two = 2
+		user.save()
+		return HttpResponseRedirect("/main/{}/".format(user.id))
 
-  
-   if request.POST.get('title') == '':
-      return render(request,'chessGame/errorname.html')
    
-   else:
-      str = request.POST.get('title', False)
-      UserInfo.objects.create(name=str)
-
-      user = UserInfo.objects.get(name=str)
-      request.session['user_id']=request.POST['title']
-      user.one_or_two = 2
-      user.save()
-      #return HttpResponseRedirect("/main")
-      return HttpResponseRedirect("/main/{}/".format(user.id))
-
 def main(request,myname):
    room = RoomInfo.objects.filter(full=1)
-
    me=UserInfo.objects.get(id=myname)  
    context={'rooms':room, 'me':me }
-
    return render(request, 'chessGame/main.html', context)
    #return HttpResponse(k.name)
 
@@ -57,13 +74,11 @@ def make_ing(request, myname):
 
    user = UserInfo.objects.get(name=request.session['user_id'])
    user.one_or_two = 1
-
    str = request.POST.get('roomname', False)
    RoomInfo.objects.create(name=str)
    room = RoomInfo.objects.get(name=str)
    room.user1 = user.name
    room.save()
-
    context = {'roominform' : room , 'room_no' : room.id }
    
    #return render (request, 'chessGame/room.html' , context)
@@ -100,7 +115,6 @@ def room_to_chess(requset, room_id, myname):
 
 	if room.user1=='none' or room.user2=='none':
 		return HttpResponseRedirect("/room/{}/{}".format(room.id, myname))
-
 	global ok_1
 	global ok_2
 	ok_1=0
@@ -116,46 +130,27 @@ def room_to_chess(requset, room_id, myname):
 			#return HttpResponse("ok_go!!")
 			return HttpResponseRedirect("/room/{}/chess/{}".format(room.id, myname))
 		
-
-	#return HttpResponse("방 안")
 def chess_stay(request, room_id, myname):
-	global stay
 	me=UserInfo.objects.get(id=myname)
 	room=RoomInfo.objects.get(id=room_id)
-	stay=0
+	room.stay=0
+	room.save()
 	while 1:
-		if stay==1:
+		room=RoomInfo.objects.get(id=room_id)
+		if room.stay==1:
 			#return render(request,'chessGame/chess.html',context)
-			stay=0
-
+			room.stay=0
+			room.save()
 			me.turn=2
 			me.save()
 			return HttpResponseRedirect("/room/{}/chess/{}".format(room_id, myname))
 			#return HttpResponse("ok_go!!")
 			#return chess(request, room_id, myname)
-
+			#return HttpResponse("방 안")
 def chess(request, room_id, myname):
 	global ready
-	global stay
-	global turn
-	stay=0
-	
 	me = UserInfo.objects.get(id=myname)
 	room = RoomInfo.objects.get(id=int(room_id))
-	"""
-	if room.turn==0:
-		room.turn=1
-		room.save
-	"""
-	"""
-	if room.turn==1:
-		room.turn=2
-		room.save
-	
-	if room.turn==2:
-		room.turn=1
-		room.save
-	"""	
 
 	"""
 	a=검은 폰
@@ -221,18 +216,16 @@ def chess(request, room_id, myname):
 		return render(request, 'chessGame/chess.html',context)
 
 	elif room.turn==0:
-		room.turn=1
-		room.save()
+		#room.turn=1
+		#room.save()
 		#return HttpResponse("ㅠㅠ")
 		if me.name==room.user1:
 			return render(request, 'chessGame/chess.html',context)
 		elif me.name==room.user2:
 			return render(request, 'chessGame/chess_stay.html',context)
-
 def chess_ing(request, room_id, myname):
-	global stay
-
-	room=RoomInfo.objects.get(id=room_id)
+	global myturn
+	room = RoomInfo.objects.get(id=room_id)
 	me = UserInfo.objects.get(id=myname)
 	str=request.POST.get('move', False)
 	#str예외처리 필요
@@ -245,6 +238,114 @@ def chess_ing(request, room_id, myname):
 			['x','x','x','x','x','x','x','x'],
 			['g','g','g','g','g','g','g','g'],
 			['h','i','j','k','l','j','i','h']]
+
+	for i in range(4):
+		if(len(str) !=4):
+			chess=ChessBoard.objects.filter(room_number=room_id)
+			cout='자릿수가 틀림'
+			room = RoomInfo.objects.get(id=int(room_id))
+			if(chess):
+				ptr=chess[0].board
+				a=0
+				a=int(a)
+				for i in range(0,8):
+					for u in range(0,8):
+						board[i][u]=ptr[a]
+						a+=1
+				context={'board':board,'room':room,'me':me,'cout':cout}
+				return render(request, 'chessGame/chess.html',context)
+		elif(isNumber(str[i])==False):
+			chess=ChessBoard.objects.filter(room_number=room_id)
+			cout='입력 범위를 넘어갔습니다.'
+			room = RoomInfo.objects.get(id=int(room_id))
+			if(chess):
+				ptr=chess[0].board
+				a=0
+				a=int(a)
+				for i in range(0,8):
+					for u in range(0,8):
+						board[i][u]=ptr[a]
+						a+=1
+				context={'board':board,'room':room,'me':me,'cout':cout}
+				return render(request, 'chessGame/chess.html',context)
+		elif(int(str[i])<=7 and int(str[i])>=0 and isNumber(str[i])==True):
+			cout='문제없음'
+		
+		else:
+			chess=ChessBoard.objects.filter(room_number=room_id)
+			cout='입력 범위를 넘어갔습니다.'
+			room = RoomInfo.objects.get(id=int(room_id))
+			if(chess):
+				ptr=chess[0].board
+				a=0
+				a=int(a)
+				for i in range(0,8):
+					for u in range(0,8):
+						board[i][u]=ptr[a]
+						a+=1
+				context={'board':board,'room':room,'me':me,'cout':cout}
+				return render(request, 'chessGame/chess.html',context)
+	temp=ChessBoard.objects.filter(room_number=room_id)
+	temp_board=board
+	ptr=temp[0].board
+	a=0
+	a=int(a)
+	for i in range(0,8):
+		for u in range(0,8):
+			temp_board[i][u]=ptr[a]
+			a+=1
+	if(Rule(temp_board,str)==False):
+		chess=ChessBoard.objects.filter(room_number=room_id)
+		cout='둘 수 없는 곳 입니다. 다시 두세요'
+		room = RoomInfo.objects.get(id=int(room_id))
+		ptr=chess[0].board
+		a=0
+		a=int(a)
+		for i in range(0,8):
+			for u in range(0,8):
+				board[i][u]=ptr[a]
+				a+=1
+				context={'board':board,'room':room,'me':me,'cout':cout}
+				return render(request, 'chessGame/chess.html',context)
+	myturn+=1
+	my=temp_board[int(str[0])][int(str[1])]
+	if(myturn==1):
+		if(my=='a' or my=='b' or my=='c' or my=='d'or my=='e' or my =='f'):
+			cout='good'
+		else:
+			myturn=0
+			chess=ChessBoard.objects.filter(room_number=room_id)
+			cout='나의 말이 아닙니다.'
+			room = RoomInfo.objects.get(id=int(room_id))
+			if(chess):
+				ptr=chess[0].board
+				a=0
+				a=int(a)
+				for i in range(0,8):
+					for u in range(0,8):
+						board[i][u]=ptr[a]
+						a+=1
+				context={'board':board,'room':room,'me':me,'cout':cout}
+				return render(request, 'chessGame/chess.html',context)
+	elif(myturn==2):
+		if(my=='g'or my=='h'or my=='i'or my=='j' or my=='k' or my=='l'):
+			myturn=0
+			cout='good'
+		else:
+			myturn=1
+			chess=ChessBoard.objects.filter(room_number=room_id)
+			cout='나의 말이 아닙니다.'
+			room = RoomInfo.objects.get(id=int(room_id))
+			if(chess):
+				ptr=chess[0].board
+				a=0
+				a=int(a)
+				for i in range(0,8):
+					for u in range(0,8):
+						board[i][u]=ptr[a]
+						a+=1
+				context={'board':board,'room':room,'me':me,'cout':cout}
+				return render(request, 'chessGame/chess.html',context)
 
 	Chess=ChessBoard.objects.filter(room_number=room_id)
 	chess=Chess[0]
@@ -274,9 +375,14 @@ def chess_ing(request, room_id, myname):
 
 	me.turn=1
 	me.save()
-	stay=1
+	room.stay=1
+	room.save()
 
 	a=0
 	for i in range(0,1000000):
 		a+=1
+
+	#context={'board':board,'str':str}
+	#return HttpResponse(chess.board)	
+	#return render(request, 'chessGame/chess.html',context)
 	return HttpResponseRedirect("/room/{}/chess/{}".format(room_id, me.id))

@@ -114,7 +114,7 @@ def Rule(board, str):
             distance = move_col
         elif move_col == move_row:
             return False
-        
+       
         if arrive_piece == 'x' or arrive_piece in White_team :   #'도착점'이 '말'이 아니고 '나의말'이 아니라면
             if start_r > arrive_pos[0] and move_row != 0 and move_col == 0:   #위로 이동하는 경우에
                 for i in range(distance): 
