@@ -11,8 +11,9 @@ class RoomInfo(models.Model):
    full = models.IntegerField(default=0)
    user1 = models.CharField(max_length=15,default='none')
    user2 = models.CharField(max_length=15,default='none')
-   turn=models.IntegerField(default=0)#안씀
+   turn=models.IntegerField(default=0)
    stay=models.IntegerField(default=0)
+   mypiece=models.IntegerField(default=0)
 
 class ChessBoard(models.Model):
    board=models.TextField()

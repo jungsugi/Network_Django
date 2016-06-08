@@ -17,17 +17,19 @@
             <div class="row">
               <div class="col-md-8 col-xs-8">
                 <h1>{{room.id}}. {{room.name}}</h1>
+                
                 <a href="/room/{{room.id}}/room_to_chess/{{me.id}}/">
-                  <div class="well" style="cursor:pointer; margin-top:550px">게임 시작</div>
+                  <div class="well" style="cursor:pointer; margin-top:530px">게임 시작</div>
                 </a>
+
                 <a href="/room/{{room.id}}/{{me.id}}/out/">
                   <button>방나가기</button>
                 </a>
               </div>
               <div class="col-md-4 col-xs-4">
-                  <div class="well" style="margin-top:80px;">{{room.user1}}</div>
-                  <div class="well">{{room.user2}}</div>
-                  <img src = "{% static 'image/chess.jpg' %}" width = 350px; style="margin-top:180px;margin-left:24px;" />
+                  <div class="well" style="margin-top:80px;"><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/189657-200.png" style="width:30px;height:30px"> {{room.user1}}</div>
+                  <div class="well"><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/189586-200.png" style="width:30px;height:30px"> {{room.user2}}</div>
+                  <img src = "{% static 'image/chess.jpg' %}" width = 350px; style="margin-top:130px;margin-left:24px;" />
               </div>
             </div>
       </div>

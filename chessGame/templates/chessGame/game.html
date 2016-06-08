@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body{
+    background-color: #b7d7e8;
+    }
+    </style>
+    </head>
+
+    <body>
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194987-200.png" style="margin-left:30px;width:200px;height:200px"/><font size="+2">1번에 1칸씩 전진가능. 대각선 방향에 있는 상대방 말을 잡는다.</font><br>
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194991-200.png" style="margin-left:30px;width:200px;height:200px"/><font size="+2">가로 세로 원하는만큼 전진,후진 이동가능.</font><br>
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194989-200.png" style="margin-left:30px;width:200px;height:200px"/><font size="+2">가로 세로 원하는만큼 대각선으로 전진,후진 이동가능.</font><br>
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194985-200.png" style="margin-left:30px;width:200px;height:200px"/><font size="+2">한줄:2칸, 직각을 이루는 줄:1칸을 L자 모양으로 움직일 수 있는 말.다른말을 뛰어넘을 수 있는 유일한말.</font><br>
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194984-200.png" style="margin-left:30px;width:200px;height:200px"/><font size="+2">게임에서 가장 중요한말.1번에 1칸씩 전진 또는 후진할 수 있다.</font><br>
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/194983-200.png" style="margin-left:30px;width:200px;height:200px"/><font size="+2">가장 강력한 말.모든방향으로 경기자가 원하는만큼 이동할 수 있다.</font><br>
+
+        <a style="margin-left:100px;margin-top:300px" href="/room/{{room.id}}/chess/{{me.id}}/"><button type="button" class="btn btn-info">게임방으로 이동</button></a>
+    </body>
+</html>
