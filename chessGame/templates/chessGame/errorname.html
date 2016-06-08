@@ -13,5 +13,9 @@
     </head>
     <body>
     	<h1>{{cout}}</h1>
+        {%if a == 0%}
     	<a href="/">로그인 화면으로 가기</a>
+        {%elif a == 1%}
+        <a href="/make/{{me.id}}/">방 만들기 화면으로 가기</a>
+        {%endif%}
     </body>

@@ -83,22 +83,22 @@ def index_ing(request):
 	ptr=UserInfo.objects.filter(name=str)
 	if(str==""):
 		cout="이름에 공백이 있으면 안됩니다"
-		context={'cout':cout}
+		context={'cout':cout, 'a':0}
 		return render(request,'chessGame/errorname.html',context)
 	elif (num1ptr != num2ptr or num1ptr !=num3ptr):
 		cout="이름에 공백이 있으면 안됩니다"
-		context={'cout':cout}
+		context={'cout':cout, 'a':0}
 		return render(request,'chessGame/errorname.html',context)
 	elif(ptr):
 		cout='이미 있는 이름입니다'
-		context={'cout':cout}
+		context={'cout':cout, 'a':0}
 		return render(request,'chessGame/errorname.html',context)
 	else:
 		UserInfo.objects.create(name=str)
 		user = UserInfo.objects.get(name=str)
-		request.session['user_id']=request.POST['title']
-		user.one_or_two = 2
-		user.save()
+		#request.session['user_id']=request.POST['title']
+		#ser.one_or_two = 2
+		#user.save()
 		return HttpResponseRedirect("/main/{}/".format(user.id))
 
    
@@ -133,17 +133,26 @@ def make(request,myname):
 
 def make_ing(request, myname):
 
-   user = UserInfo.objects.get(name=request.session['user_id'])
-   user.one_or_two = 1
-   str = request.POST.get('roomname', False)
-   RoomInfo.objects.create(name=str)
-   room = RoomInfo.objects.get(name=str)
-   room.mypiece=0
-   room.user1 = user.name
-   room.save()
-   context = {'roominform' : room , 'room_no' : room.id }
-   
-   return HttpResponseRedirect("/room/{}/{}".format(room.id, myname))
+   #user = UserInfo.objects.get(name=request.session['user_id'])
+   #user.one_or_two = 1
+	str = request.POST.get('roomname', False)
+	me=UserInfo.objects.get(id=myname)
+
+	room_all=RoomInfo.objects.all()
+	for i in room_all:
+		if i.name==str:
+			cout='이미 있는 방 제목 입니다.'
+			context={'cout':cout,'a':1,'me':me }
+			return render(request,'chessGame/errorname.html',context)
+
+	RoomInfo.objects.create(name=str)
+	room = RoomInfo.objects.get(name=str)
+	room.mypiece=0
+	room.user1 = me.name
+	room.save()
+	context = {'roominform' : room , 'room_no' : room.id }
+
+	return HttpResponseRedirect("/room/{}/{}".format(room.id, myname))
    
 def room(request, room_id,myname):
 
