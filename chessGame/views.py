@@ -73,6 +73,27 @@ def out(request, room_id, myname):
 			room.stay=1
 			room.save()
 			return HttpResponseRedirect("/room/{}/chess/{}".format(room_id, myname))
+	else:
+		Chess=ChessBoard.objects.filter(room_number=room_id)
+		chess=Chess[0]
+		ptr=chess.board
+		board=[['b','c','d','e','f','d','c','b'],
+			['a','a','a','a','a','a','a','a'],
+			['x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x'],
+			['x','x','x','x','x','x','x','x'],
+			['g','g','g','g','g','g','g','g'],
+			['h','i','j','k','l','j','i','h']]
+			
+		a=0
+		for i in range(0,8):
+			for u in range(0,8):
+				board[i][u]=ptr[a]
+				a+=1
+
+		context ={"me":me, "room":room, 'board':board}
+		return render(request, 'chessGame/chess_win.html',context)
 
 
 def index_ing(request):
@@ -363,9 +384,16 @@ def chess_ing(request, room_id, myname):
 						a+=1
 				context={'board':board,'room':room,'me':me,'cout':cout}
 				return render(request, 'chessGame/chess.html',context)
-
-
+	temp=ChessBoard.objects.filter(room_number=room_id)
 	temp_board=board
+	ptr=temp[0].board
+	a=0
+	a=int(a)
+	for i in range(0,8):
+		for u in range(0,8):
+			temp_board[i][u]=ptr[a]
+			a+=1
+	
 	room.mypiece +=1
 	my=temp_board[int(str[0])][int(str[1])]
 	if(room.mypiece==1):
@@ -407,15 +435,7 @@ def chess_ing(request, room_id, myname):
 				return render(request, 'chessGame/chess.html',context)
 
 
-	temp=ChessBoard.objects.filter(room_number=room_id)
-	#temp_board=board
-	ptr=temp[0].board
-	a=0
-	a=int(a)
-	for i in range(0,8):
-		for u in range(0,8):
-			temp_board[i][u]=ptr[a]
-			a+=1
+	
 	if(Rule(temp_board,str)==False):
 		chess=ChessBoard.objects.filter(room_number=room_id)
 		cout='둘 수 없는 곳 입니다. 다시 두세요'
@@ -429,6 +449,13 @@ def chess_ing(request, room_id, myname):
 				a+=1
 				context={'board':board,'room':room,'me':me,'cout':cout}
 				return render(request, 'chessGame/chess.html',context)
+
+	your=temp_board[int(str[2])][int(str[3])]
+	if(your=='f'):
+		room.turn=2
+	elif(your=='l'):
+		room.turn=3
+
 
 
 	Chess=ChessBoard.objects.filter(room_number=room_id)

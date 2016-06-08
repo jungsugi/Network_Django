@@ -302,9 +302,9 @@ def Rule(board, str):
             else:
                 return False
             
-        elif down and right:  #왼쪽 위로 이동?
+        elif up and left:  #왼쪽 위로 이동?
             if end_r == start_r - 1 and end_c == start_c - 2:  #왼쪽 위 경우1.
-                if (board[start_r-1][start_c-1] == 'x')or(board[start_r-1][start_r-1] in Black_team)or (board[start_r][start_c-1]=='x') or (board[start_r][start_c-1] in Black_team):
+                if (board[start_r-1][start_c-1] == 'x')or(board[start_r-1][start_r-1] in Black_team) or (board[start_r][start_c-1]=='x') or (board[start_r][start_c-1] in Black_team):
                     return True #한경로라도 이동할수 있는 경로가 있으면 가능
                 else:
                     return False
@@ -315,7 +315,8 @@ def Rule(board, str):
                     return False
             else:
                 return False
-        else: #이도저도 아니면 그냥 짤
+        else:
+        #이도저도 아니면 그냥 짤
             return False
                     
             
@@ -364,7 +365,7 @@ def Rule(board, str):
             
         elif up and right:   #오른쪽 위로 이동
             if end_r == start_r - 2 and end_c == start_c +1:  #오른쪽 아래 경우1.
-                if (board[start_r-1][start_c+1] == 'x')or(board[start_r-1][start_r+1] in White_team)or(board[start_r-1][start_c]=='x') or (board[start_r-1][start_c] in White_team):
+                if (board[start_r-2][start_c+1] == 'x')or(board[start_r-1][start_r+1] in White_team)or(board[start_r-1][start_c]=='x') or (board[start_r-1][start_c] in White_team):
                     return True #한경로라도 이동할수 있는 경로가 있으면 가능
                 else:
                     return False
@@ -376,7 +377,7 @@ def Rule(board, str):
             else:
                 return False
             
-        elif down and right:  #왼쪽 위로 이동?
+        elif up and left:  #왼쪽 위로 이동?
             if end_r == start_r - 1 and end_c == start_c - 2:  #왼쪽 위 경우1.
                 if (board[start_r-1][start_c-1] == 'x')or(board[start_r-1][start_r-1] in White_team)or(board[start_r][start_c-1]=='x') or (board[start_r][start_c-1] in White_team):
                     return True #한경로라도 이동할수 있는 경로가 있으면 가능
